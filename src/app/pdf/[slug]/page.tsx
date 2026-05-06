@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Footer } from "@/components/shared/footer";
 import { NavbarShell } from "@/components/shared/navbar-shell";
+import { ShareButton } from "@/components/shared/share-button";
 import { TaskPostCard } from "@/components/shared/task-post-card";
 import { SchemaJsonLd } from "@/components/seo/schema-jsonld";
 import { buildPostMetadata, buildTaskMetadata } from "@/lib/seo";
@@ -53,7 +54,7 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
     notFound();
   }
 
-  const viewerUrl = `${fileUrl}#toolbar=0&navpanes=0&scrollbar=0`;
+  const viewerUrl = `${fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitW&pagemode=none`;
   const baseUrl = SITE_CONFIG.baseUrl.replace(/\/$/, "");
   const category =
     typeof contentAny.category === "string" ? contentAny.category : "";
@@ -106,11 +107,12 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
           ← Back to PDF Library
         </Link>
         <h1 className="text-2xl font-semibold text-foreground">{post.title}</h1>
-        <div className="overflow-hidden rounded-2xl bg-background">
+        <div className="overflow-hidden rounded-2xl border border-border bg-white mx-auto" style={{ width: '100%', maxWidth: '700px', height: 'auto' }}>
           <iframe
             src={viewerUrl}
             title={post.title}
-            className="h-[85vh] w-full"
+            className="w-full border-0"
+            style={{ height: '85vh', display: 'block' }}
           />
         </div>
         <div className="flex items-center gap-3">
@@ -122,6 +124,10 @@ export default async function PdfDetailPage({ params }: { params: Promise<{ slug
           >
             Download PDF
           </a>
+          <ShareButton
+            title={post.title}
+            url={`${baseUrl}/pdf/${post.slug}`}
+          />
         </div>
         {related.length ? (
           <section className="pt-4">
